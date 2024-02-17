@@ -2,6 +2,7 @@ import React from "react";
 import "./CSS/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { storeUserData } from "../helper";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -13,13 +14,11 @@ function LoginPage() {
       password: formData.get("password"),
     };
 
-    if (userData.identifier === "" && userData.password === "") {
-      console.log("tost");
+    if (userData.identifier === "" || userData.password === "") {
       toast.error("Please enter valid input");
     }
     try {
       if (userData.identifier !== "" && userData.password !== "") {
-        console.log("first");
         const response = await fetch("http://localhost:1337/api/auth/local", {
           method: "POST",
           headers: {
@@ -27,20 +26,24 @@ function LoginPage() {
           },
           body: JSON.stringify(userData),
         });
+        const resData = await response.json();
+
+        console.log(resData);
         if (!response.ok) {
           throw Error
         } else if (response.ok) {
           toast.success("Login successfully");
+          storeUserData(resData)
           setTimeout(() => {
             navigate("/");
           }, 1500);
         }
-        const resData = await response.json();
-        console.log(resData);
+       
       }
     } catch (error) {
         toast.error("Something went wrrog");
     }
+  
   }
   return (
     <>

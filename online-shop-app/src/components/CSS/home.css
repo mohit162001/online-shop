@@ -1,0 +1,19 @@
+.home-outer-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-container{
+    margin-top: 10rem;
+    width: 80%;
+    height: 80%;
+    text-align: center;
+}
+
+.home-container h1{
+    font-size: 4rem;
+    color: aliceblue;
+}                                                                                                                                                                                                                                                             

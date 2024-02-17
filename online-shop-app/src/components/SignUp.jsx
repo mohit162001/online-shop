@@ -3,7 +3,7 @@ import "./CSS/signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
-function LoginPage() {
+function SignUp() {
   const navigate = useNavigate();
   async function handleSubmit(event) {
     event.preventDefault();
@@ -15,13 +15,23 @@ function LoginPage() {
     };
     console.log(userData)
 
-    if (userData.username === "" && userData.password === "") {
+    if (userData.username === "" || userData.password === "" || userData.password === "") {
       console.log("tost");
       toast.error("Please enter valid input");
+    }else if(!userData.email.includes('.com')){
+      toast("Please enter vaild email",{
+        duration:3000,
+        icon:'🙄'
+      })
+    }else if(!userData.password.length<6){
+      toast("Password should has minimun 6 characters",{ 
+        duration:3000,
+        icon:'🔑',
+        position :'bottom-center'
+      })
     }
     try {
       if (userData.username !== "" && userData.password !== "") {
-        console.log("first");
         const response = await fetch("http://localhost:1337/api/auth/local/register", {
           method: "POST",
           headers: {
@@ -30,16 +40,17 @@ function LoginPage() {
           body: JSON.stringify(userData),
         });
         const resData = await response.json();
-        console.log(resData);
         if (!response.ok) {
             if(resData.error.message === "Email or Username are already taken"){
-                toast.error("User or email already exist");
+                toast("User or email already exist",{
+                  icon: '😕'
+                });
             }else{
                 throw Error
             }
           
         } else if (response.ok) {
-          toast.success("Login successfully");
+          toast.success("signup successfully");
           setTimeout(() => {
             navigate("/login");
           }, 1500);
@@ -47,7 +58,9 @@ function LoginPage() {
         
       }
     } catch (error) {
-        toast.error("Something went wrrog");
+        toast.error("Something went wrrog",{
+          duration:1000
+        });
     }
   }
   return (
@@ -63,7 +76,7 @@ function LoginPage() {
               type="text"
               id="username"
               name="username"
-              placeholder="name or email"
+              placeholder="name "
             />
           </div>
           <div className="form-group">
@@ -101,4 +114,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignUp;
